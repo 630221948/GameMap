@@ -1,0 +1,55 @@
+{
+	"groups": [
+		{
+			"keys": "bg_jpg,egret_icon_png,description_json,PLAYER_WALK_png,Road_png,Wall_png,PLAYER_IDLE_json,PLAYER_IDLE_png,PLAYER_WALK_json",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"name": "bg_jpg",
+			"type": "image",
+			"url": "assets/bg.jpg"
+		},
+		{
+			"name": "egret_icon_png",
+			"type": "image",
+			"url": "assets/egret_icon.png"
+		},
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "PLAYER_WALK_png",
+			"type": "image",
+			"url": "assets/PLAYER_WALK.png"
+		},
+		{
+			"name": "Road_png",
+			"type": "image",
+			"url": "assets/Road.png"
+		},
+		{
+			"name": "Wall_png",
+			"type": "image",
+			"url": "assets/Wall.png"
+		},
+		{
+			"name": "PLAYER_IDLE_json",
+			"type": "json",
+			"url": "assets/PLAYER_IDLE.json"
+		},
+		{
+			"name": "PLAYER_IDLE_png",
+			"type": "image",
+			"url": "assets/PLAYER_IDLE.png"
+		},
+		{
+			"name": "PLAYER_WALK_json",
+			"type": "json",
+			"url": "assets/PLAYER_WALK.json"
+		}
+	]
+}
