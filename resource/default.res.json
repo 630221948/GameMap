@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,PLAYER_WALK_png,Road_png,Wall_png,PLAYER_IDLE_json,PLAYER_IDLE_png,PLAYER_WALK_json,exitbutton_png,Wu_png,UMP45_png,Enemy_png,emoji0_png,emoji1_png,talkwindow_png,button_png,npc_0_png,npc_1_png,npc_2_png,EnemyHP_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,PLAYER_WALK_png,Road_png,Wall_png,PLAYER_IDLE_json,PLAYER_IDLE_png,PLAYER_WALK_json",
 			"name": "preload"
 		}
 	],
@@ -50,66 +50,6 @@
 			"name": "PLAYER_WALK_json",
 			"type": "json",
 			"url": "assets/PLAYER_WALK.json"
-		},
-		{
-			"name": "exitbutton_png",
-			"type": "image",
-			"url": "assets/exitbutton.png"
-		},
-		{
-			"name": "Wu_png",
-			"type": "image",
-			"url": "assets/Wu.png"
-		},
-		{
-			"name": "UMP45_png",
-			"type": "image",
-			"url": "assets/UMP45.png"
-		},
-		{
-			"name": "Enemy_png",
-			"type": "image",
-			"url": "assets/Enemy.png"
-		},
-		{
-			"name": "emoji0_png",
-			"type": "image",
-			"url": "assets/emoji0.png"
-		},
-		{
-			"name": "emoji1_png",
-			"type": "image",
-			"url": "assets/emoji1.png"
-		},
-		{
-			"name": "talkwindow_png",
-			"type": "image",
-			"url": "assets/talkwindow.png"
-		},
-		{
-			"name": "button_png",
-			"type": "image",
-			"url": "assets/button.png"
-		},
-		{
-			"name": "npc_0_png",
-			"type": "image",
-			"url": "assets/npc_0.png"
-		},
-		{
-			"name": "npc_1_png",
-			"type": "image",
-			"url": "assets/npc_1.png"
-		},
-		{
-			"name": "npc_2_png",
-			"type": "image",
-			"url": "assets/npc_2.png"
-		},
-		{
-			"name": "EnemyHP_png",
-			"type": "image",
-			"url": "assets/EnemyHP.png"
 		}
 	]
 }
