@@ -94,7 +94,7 @@ var GridMap = (function () {
             { node: new MapNode(8, 7, true), image: "Road_png" },
             { node: new MapNode(9, 7, true), image: "Road_png" },
             //第九行
-            { node: new MapNode(0, 8, true), image: "Road_png" },
+            { node: new MapNode(0, 8, false), image: "Wall_png" },
             { node: new MapNode(1, 8, false), image: "Wall_png" },
             { node: new MapNode(2, 8, false), image: "Wall_png" },
             { node: new MapNode(3, 8, false), image: "Wall_png" },

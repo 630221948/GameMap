@@ -66,13 +66,13 @@ var AStar = (function () {
             });
             ;
             this._open.map(function (a) {
-                console.log(a.f);
+                //console.log(a.f);
             });
-            console.log("======");
+            //console.log("======")
             currentnode = this._open.shift();
         }
         this.buildPath();
-        console.log('right');
+        //console.log('right')
         return true;
     };
     p.buildPath = function () {

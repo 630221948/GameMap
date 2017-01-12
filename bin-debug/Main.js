@@ -73,10 +73,23 @@ var Main = (function (_super) {
      * Create a game scene
      */
     p.createGameScene = function () {
-        var _this = this;
+        //let clickLayer: number = 0;
+        var scene = new GameScene();
+        this.addChild(scene);
+        var bullet_0 = new Bullet(BulletType.NORMAL, BulletLvl.GENERAL); //0型加成为0：相当于没有
+        var bullet_1 = new Bullet(BulletType.JHP, BulletLvl.GENERAL);
+        var fist = new Weapon(1, Quality.WHITE, bullet_0, 1, "赤手空拳");
+        var UMP45 = new Weapon(10, Quality.WHITE, bullet_1, 10, "UMP45");
+        var Wu = new Hero(100, 5, fist, "不知火舞");
+        //let laoer: Hero = new Hero();
+        var heroTeam = [];
+        heroTeam.push(Wu);
+        //heroTeam.push(laoer);
+        var user = new User(0, 0, 0, 0, heroTeam);
+        console.log(user.fightPower);
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
-        var gridMap = new GridMap(this);
+        var gridMap = new GridMap(scene);
         var idledata = RES.getRes("PLAYER_IDLE_json");
         var idletxtr = RES.getRes("PLAYER_IDLE_png");
         var idle_mcFactory = new egret.MovieClipDataFactory(idledata, idletxtr);
@@ -88,7 +101,10 @@ var Main = (function (_super) {
         //this.addChild(playeridle_mc);
         //playeridle_mc.gotoAndPlay(1,-1);
         var PlayerContainer = new egret.DisplayObjectContainer();
-        this.addChild(PlayerContainer);
+        PlayerContainer.touchEnabled = true;
+        PlayerContainer.width = 100;
+        PlayerContainer.height = 100;
+        scene.addChild(PlayerContainer);
         PlayerContainer.addChild(playeridle_mc);
         PlayerContainer.addChild(playerwalk_mc);
         playerwalk_mc.gotoAndPlay(1, -1);
@@ -96,109 +112,185 @@ var Main = (function (_super) {
         playeridle_mc.alpha = 0;
         playerwalk_mc.alpha = 0;
         // this.touchEnabled = true;
+        scene.addChild(PlayerContainer);
+        GameScene.replaceScene(scene);
+        ///////////////////////////////////////////////////////////////////////////
+        var taskService = TaskService.getInstance();
+        var sceneService = SceneService.getInstance();
+        var npcTexture;
+        var dialoguePanel = new TaskDialoguePanel();
+        dialoguePanel.y = 50;
+        this.addChild(dialoguePanel);
+        var dialoguePanel1 = new TaskDialoguePanel();
+        dialoguePanel1.y = 650;
+        this.addChild(dialoguePanel1);
+        npcTexture = this.createBitmapByName("npc_0_png"); //新手任务npc
+        var Npc_0 = new NPC("00", dialoguePanel, npcTexture);
+        Npc_0.x = 600;
+        Npc_0.y = 380;
+        Npc_0.scaleX = 0.35;
+        Npc_0.scaleY = 0.35;
+        this.addChild(Npc_0);
+        npcTexture = this.createBitmapByName("npc_1_png"); //新手任务点击nppc
+        var Npc_1 = new NPC("01", dialoguePanel, npcTexture);
+        Npc_1.x = 300;
+        Npc_1.y = 0;
+        Npc_1.scaleX = 0.35;
+        Npc_1.scaleY = 0.35;
+        this.addChild(Npc_1);
+        npcTexture = this.createBitmapByName("npc_2_png"); ///打怪任务npc
+        var Npc_2 = new NPC("02", dialoguePanel1, npcTexture);
+        Npc_2.x = 420;
+        Npc_2.y = 600;
+        Npc_2.scaleX = 0.1;
+        Npc_2.scaleY = 0.1;
+        this.addChild(Npc_2);
+        // npcTexture = this.createBitmapByName("Enemy_png")
+        // var Enemy_0: NPC = new NPC("02", dialoguePanel, npcTexture);
+        // Enemy_0.x = 0;
+        // Enemy_0.y = 900;
+        // Enemy_0.scaleX = 0.2;
+        // Enemy_0.scaleY = 0.2;
+        // this.addChild(Enemy_0);
+        var taskPanel = new TaskPanel();
+        taskPanel.x = 800;
+        taskPanel.y = 950;
+        this.addChild(taskPanel);
+        var task_0 = new Task("00", "新手任务", "我有一个新手任务！请用鼠标点目标NPC！", -1, 1);
+        var task_1 = new Task("02", "打怪任务", "我有一个打怪任务！请用鼠标点目标NPC！", -2, 1);
+        var mockMosterKill = new MockMonsterKill(sceneService);
+        mockMosterKill.x = 0;
+        mockMosterKill.y = 900;
+        mockMosterKill.scaleX = 0.2;
+        mockMosterKill.scaleY = 0.2;
+        this.addChild(mockMosterKill);
+        var killMonsterTaskCondition = new KillMonsterTaskCondition();
+        taskService.observerList.push(Npc_0);
+        taskService.observerList.push(Npc_1);
+        taskService.observerList.push(taskPanel);
+        taskService.taskList.push(task_0);
+        taskService.notify();
+        sceneService.observerList.push(killMonsterTaskCondition);
+        sceneService.observerList.push(Npc_2);
+        sceneService.observerList.push(taskPanel);
+        sceneService.taskList.push(task_1);
+        sceneService.notify();
+        //////////////////////////////////////////
+        var exitButton = this.createBitmapByName("exitbutton_png");
+        var UMP45Icon = this.createBitmapByName("UMP45_png");
+        UMP45Icon.x = 0;
+        UMP45Icon.y = 700;
+        this.addChild(UMP45Icon);
+        var wuIcon = this.createBitmapByName("Wu_png");
+        wuIcon.scaleX = 0.5;
+        wuIcon.scaleY = 0.5;
+        var heroesInfoField = new egret.TextField();
+        var heroesPanel = new egret.DisplayObjectContainer();
+        var panelY = 0;
+        heroesPanel.x = -300;
+        heroesPanel.width = 200;
+        heroesPanel.height = 400;
+        var panelMap = new egret.Shape();
+        heroesPanel.addChild(panelMap);
+        panelMap.graphics.beginFill(0x000000);
+        panelMap.graphics.drawRect(0, 0, 300, 250);
+        panelMap.graphics.endFill();
+        panelMap.alpha = 0.7;
+        heroesPanel.addChild(wuIcon);
+        wuIcon.x = 180;
+        wuIcon.y = 0;
+        heroesPanel.addChild(exitButton);
+        exitButton.scaleX = 0.5;
+        exitButton.scaleY = 0.5;
+        exitButton.x = 240;
+        exitButton.y = 200;
+        //exitButton.touchEnabled
+        //
+        //;
+        // for (let h of user.hero) {
+        //     heroesInfoField = displayUtils(h);
+        //     heroesInfoField.y = panelY;
+        //     heroesPanel.addChild(heroesInfoField);
+        //     panelY += 200;
+        // }
+        this.addChild(heroesPanel);
+        PlayerContainer.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            console.log("233333");
+            for (var _i = 0, _a = user.hero; _i < _a.length; _i++) {
+                var h = _a[_i];
+                heroesInfoField.y = panelY;
+                heroesInfoField = displayUtils(h);
+                heroesPanel.addChild(heroesInfoField);
+                panelY += 200;
+            }
+            var tw = egret.Tween.get(heroesPanel);
+            tw.to({ x: 20 }, 500);
+            exitButton.touchEnabled = true;
+            GameScene.clickLayer = 2;
+        }, this, false, 2);
+        exitButton.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
+            var tw = egret.Tween.get(heroesPanel);
+            tw.to({ x: -300 }, 500);
+            exitButton.touchEnabled = false;
+            heroesPanel.removeChild(heroesInfoField);
+            GameScene.clickLayer = 1;
+        }, this, false, 1);
         var m = new StateMachine(this, playeridle_mc, PlayerContainer, playerwalk_mc);
         //m.setState("move");
         var interval;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function (e) {
-            var astar = new AStar(gridMap);
-            egret.stopTick(moveFunction, _this);
-            clearInterval(interval);
-            m.x = e.stageX;
-            m.y = e.stageY;
-            //console.log("TargetX==============" + e.stageX);
-            var MaxLength = 0;
-            var RatioX;
-            var RatioY;
-            //var dx = e.stageX - PlayerContainer.x;
-            //var dy = e.stageY - PlayerContainer.y;
-            //MaxLength = Math.pow(dx*dx+dy*dy,1/2);
-            //RatioX = dx / MaxLength;
-            //RatioY = dy / MaxLength;
-            //m.RatioX = RatioX;
-            //m.RatioY = RatioY;
-            var nodeCounts = gridMap.getNodeCounts();
-            var endXPos = Math.floor(e.stageX / nodeCounts); //终点的x和y值（行和列数）
-            var endYPos = Math.floor(e.stageY / nodeCounts);
-            var startXPos = Math.floor(m.PlayerContainer.x / nodeCounts); //起点的x和y值（行和列数）
-            var startYPos = Math.floor(m.PlayerContainer.y / nodeCounts);
-            if (astar.findPath(gridMap.getNode(startXPos, startYPos), gridMap.getNode(endXPos, endYPos))) {
-                astar._path.map(function (tile) {
-                    console.log("x:" + tile.x + ",y:" + tile.y);
-                });
-            }
-            var pathLength = astar._path.length;
-            var i = 0;
-            astar._path.shift(); //弹出第一个节点，防止第一次移动时原地踏步
-            interval = setInterval(function () {
-                var pos = astar._path.shift();
-                m.x = pos.x * nodeCounts;
-                m.y = pos.y * nodeCounts;
-                var dx = m.x - m.PlayerContainer.x;
-                var dy = m.y - m.PlayerContainer.y;
-                MaxLength = Math.pow(dx * dx + dy * dy, 1 / 2);
-                RatioX = dx / MaxLength;
-                RatioY = dy / MaxLength;
-                m.RatioX = RatioX;
-                m.RatioY = RatioY;
-                m.setState("move");
-                m.timeOnEnterFrame = egret.getTimer();
-                egret.startTick(moveFunction, _this);
-                /*console.log("当前终点：" + m.x + "   " + m.y);
-                console.log("当前i：" + i);
-                console.log("数组长度：" + astar._path.length);
-                console.log("path中节点数量："+pathLength);
-                console.log("节点下标记录i的值"+i);*/
-                i++;
-                if (i == pathLength - 1) {
-                    console.log("2332322322323232323232332323");
-                    clearInterval(interval);
-                    i = 0;
-                }
-            }, 400);
-            /*
-                for (var i = 0; i < pathLength; i++) {
-                var pos = astar._path.shift();
-                m.x = pos.x * nodeCounts;
-                m.y = pos.y * nodeCounts;
-                var dx = m.x - m.PlayerContainer.x;
-                var dy = m.y - m.PlayerContainer.y;
-                MaxLength = Math.pow(dx * dx + dy * dy, 1 / 2);
-                RatioX = dx / MaxLength;
-                RatioY = dy / MaxLength;
-                m.RatioX = RatioX;
-                m.RatioY = RatioY;
-                m.timeOnEnterFrame = egret.getTimer();
-                egret.startTick(moveFunction, this);
-                //this.addEventListener(egret.Event.ENTER_FRAME, moveFunction, this);
-                console.log("当前终点：" + m.x + "   " + m.y);
-                console.log("当前i：" + i);
-                console.log("数组长度：" + astar._path.length);
-            }
-            */
-        }, this);
-        function moveFunction() {
-            console.log("============开始移动===========");
-            var now = egret.getTimer();
-            var time = m.timeOnEnterFrame;
-            var pass = now - time;
-            var speed = 0.3;
-            //console.log("Ratio=============="+m.RatioX);
-            m.PlayerContainer.x += speed * pass * m.RatioX;
-            m.PlayerContainer.y += speed * pass * m.RatioY;
-            //console.log("ContainerCoordinate=============="+m.PlayerContainer.x);
-            //console.log("TargetCoordinate=============="+m.x);
-            m.timeOnEnterFrame = egret.getTimer();
-            //console.log(pass);
-            if (m.PlayerContainer.y - m.y < 6 && m.PlayerContainer.y - m.y > -6 &&
-                m.PlayerContainer.x - m.x < 6 && m.PlayerContainer.x - m.x > -6) {
-                console.log("Im IN!!!!");
-                egret.stopTick(moveFunction, this);
-                m.setState("stand");
-            }
-            return false;
-            //console.log("ContainerCoordinate=============="+this.mac.PlayerContainer.x);
-            //console.log("TargetCoordinate=============="+this.mac.x);        
-        }
+            // clickLayer--;
+            // if (clickLayer == -1) {
+            //     let astar: AStar = new AStar(gridMap);
+            //     egret.stopTick(moveFunction, this);
+            //     clearInterval(interval);
+            //     m.x = e.stageX;
+            //     m.y = e.stageY;
+            //     let MaxLength = 0;
+            //     let RatioX;
+            //     let RatioY;
+            //     let nodeCounts: number = gridMap.getNodeCounts()
+            //     let endXPos = Math.floor(e.stageX / nodeCounts);            //终点的x和y值（行和列数）
+            //     let endYPos = Math.floor(e.stageY / nodeCounts);
+            //     let startXPos = Math.floor(m.PlayerContainer.x / nodeCounts);//起点的x和y值（行和列数）
+            //     let startYPos = Math.floor(m.PlayerContainer.y / nodeCounts);
+            //     if (astar.findPath(gridMap.getNode(startXPos, startYPos), gridMap.getNode(endXPos, endYPos))) { //传入起点和终点
+            //         astar._path.map((tile) => {
+            //             console.log(`x:${tile.x},y:${tile.y}`)
+            //         });
+            //     }
+            //     let pathLength: number = astar._path.length;
+            //     let i: number = 0;
+            //     astar._path.shift();                           //弹出第一个节点，防止第一次移动时原地踏步
+            //     interval = setInterval(() => {
+            //         let pos = astar._path.shift();
+            //         m.x = pos.x * nodeCounts;
+            //         m.y = pos.y * nodeCounts;
+            //         let dx = m.x - m.PlayerContainer.x;
+            //         let dy = m.y - m.PlayerContainer.y;
+            //         MaxLength = Math.pow(dx * dx + dy * dy, 1 / 2);
+            //         RatioX = dx / MaxLength;
+            //         RatioY = dy / MaxLength;
+            //         m.RatioX = RatioX;
+            //         m.RatioY = RatioY;
+            //         m.setState("move");
+            //         m.timeOnEnterFrame = egret.getTimer();
+            //         egret.startTick(moveFunction, this);
+            //         /*console.log("当前终点：" + m.x + "   " + m.y);
+            //         console.log("当前i：" + i);
+            //         console.log("数组长度：" + astar._path.length);             
+            //         console.log("path中节点数量："+pathLength);
+            //         console.log("节点下标记录i的值"+i);*/
+            //         i++;
+            //         if (i == pathLength - 1) {
+            //             console.log("2332322322323232323232332323")
+            //             clearInterval(interval);
+            //             i = 0;
+            //         }
+            //     }, 400);
+            //     clickLayer++;
+            // }
+        }, this, false, 0);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
